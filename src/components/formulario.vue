@@ -1,8 +1,13 @@
 <script setup>
     import { ref, reactive } from 'vue';
+    import Alert from './alert.vue';
     const nombre = ref('Cali');
 
     // Otra forma de leer con un method handler
+
+    const alerta = reactive({
+
+    });
 
     const leer = (e) => {
         nombre.value = e.target.value;
@@ -14,7 +19,22 @@
         email: '',
         fecha: '',
         sintomas: ''
-    })
+    });
+
+    const validar = e => {
+        //e.preventDefault(); //Para detener que se ejecute el evento de hacer refersh al dar submit
+
+        //[registro.nombre, paciente.propietario].includes('') -> Es para checar si tiene algun espacio
+        if(Object.values(registro).includes('')){
+            alerta.mensaje = 'Todos los campos son obligatorios';
+            alerta.tipo ='error';
+            return;
+        }else{
+            alerta.mensaje = 'Guardado Correctamente';
+            alerta.tipo = 'exito';
+            return;
+        }
+    }
 </script>
 
 
@@ -26,8 +46,12 @@
             Anadir Paciente
             <span class="text-indigo-600 font-bold">Adminstralos</span>
         </p>
+
+        <Alert v-if="alerta.mensaje" :alerta="alerta"></Alert>
+
+
         <!-- Crear el formularlo el shadow sirve para poner somreba y rounded para agregar border radius -->
-        <form class="bg-white shadow-md rounded-lg py-10 px-5 mb-10" >
+        <form class="bg-white shadow-md rounded-lg py-10 px-5 mb-10" v-on:submit.prevent="validar">
             <!-- En se puede usar v-model en vez de: :value = "nombre" @input="(e) => nombre = e.target.value" -->
             <div class="mb-5">
                 <label for="nombre" class="block text-gray-700 uppercase font-bold"> Nombre de la mascota </label>
